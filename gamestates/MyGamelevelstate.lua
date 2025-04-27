@@ -7,6 +7,9 @@ local MyGameLevelState = spectrum.LevelState:extend "MyGameLevelState"
 
 function MyGameLevelState:__new(level, display, actionHandlers)
    spectrum.LevelState.__new(self, level, display, actionHandlers)
+   local cellSize = self.display.cellSize
+   local ax, ay = 8, 8
+   self.display.camera:centerOn(ax * cellSize.x, ay * cellSize.y)
 end
 
 function MyGameLevelState:update(dt)
@@ -16,9 +19,6 @@ function MyGameLevelState:update(dt)
       return
    end
 
-   local cellSize = self.display.cellSize
-   local ax, ay = self.decision.actor:getPosition():decompose()
-   self.display.camera:centerOn(ax * cellSize.x, ay * cellSize.y)
 end
 
 function MyGameLevelState:drawBeforeCells(display)
@@ -59,6 +59,12 @@ function MyGameLevelState:keypressed(key, scancode)
       if move:canPerform(self.level) then
          decision:setAction(move)
          return
+      end
+
+      local actors = self.level:getActorsAt(destination:decompose())
+      local kick = prism.actions.Kick(owner, { actors[1] })
+      if kick:canPerform(self.level) then
+         decision:setAction(kick)
       end
    end
 end
