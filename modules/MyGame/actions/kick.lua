@@ -5,7 +5,7 @@ function KickTarget:validate(owner, actor, targets)
    ---@cast actor Actor
    return actor:is(prism.Actor)
       and actor:hasComponent(prism.components.Collider)
-      and owner:getRange("8way", actor) == 1
+      and owner:getRange(actor) == 1
 end
 
 --- @class KickAction : Action
