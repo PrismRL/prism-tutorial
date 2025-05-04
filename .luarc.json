@@ -13,11 +13,8 @@
         "geometer"
     ],
     "Lua.workspace.library": [
-        "${3rd}/love2d/library",
         "prism"
     ],
-    "Lua.workspace.ignoreDir": [
-        "lib"
-    ],
-    "completion.autoRequire": false
+    "completion.autoRequire": false,
+    "type.weakUnionCheck": true
 }

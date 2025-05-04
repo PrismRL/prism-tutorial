@@ -38,7 +38,7 @@ function Kick:_perform(level, kicked)
          break
       end
    end
-   level:moveActor(kicked, nextpos)
+   level:moveActor(kicked, finalpos)
 end
 
 return Kick

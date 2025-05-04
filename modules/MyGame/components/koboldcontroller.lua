@@ -17,8 +17,8 @@ function KoboldController:act(level, actor)
    local path = level:findPath(actor:getPosition(), player:getPosition(), 1, mover.mask)
 
    -- If a valid path is found, attempt to move along it.
-   if path and path:length() > 0 then
-      local move = prism.actions.Move(actor, {path:pop()})
+   if path then
+      local move = prism.actions.Move(actor, { path:pop() })
       if move:canPerform(level) then
          return move
       end
