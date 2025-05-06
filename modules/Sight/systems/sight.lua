@@ -46,7 +46,7 @@ function SightSystem:updateSeenActors(level, actor)
    sensesComponent.actors = prism.ActorStorage()
 
    for x, y, _ in sensesComponent.cells:each() do
-      for other in level:eachActorAt(x, y) do
+      for other in level:query():at(x, y):iter() do
          sensesComponent.actors:addActor(other)
       end
    end
