@@ -114,6 +114,15 @@ function MyGameLevelState:keypressed(key, scancode)
          decision:setAction(move)
          return
       end
+
+      local target = self.level:query() -- grab a query object
+         :at(destination:decompose()) -- restrict the query to the destination
+         :first() -- grab one of the kickable things, or nil
+
+      local kick = prism.actions.Kick(owner, target)
+      if kick:canPerform(self.level) then
+         decision:setAction(kick)
+      end
    end
 
    -- Wait is a no op, skip turn.
