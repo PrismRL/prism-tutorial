@@ -25,7 +25,6 @@ end
 --- @param level Level
 --- @param kicked Actor
 function Kick:_perform(level, kicked)
-   print "YA"
    local direction = (kicked:getPosition() - self.owner:getPosition())
 
    local mask = prism.Collision.createBitmaskFromMovetypes{ "fly" }
