@@ -1,4 +1,5 @@
 local keybindings = require "keybindingschema"
+local GameOverState = require "gamestates.gameoverstate"
 
 --- @class MyGameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
@@ -32,7 +33,8 @@ function MyGameLevelState:__new(display)
    local level = prism.Level(map, actors, {
       prism.systems.Senses(),
       prism.systems.Sight(),
-      prism.systems.Fall()
+      prism.systems.Fall(),
+      prism.systems.LoseCondition()
    })
 
 
@@ -44,6 +46,9 @@ end
 function MyGameLevelState:handleMessage(message)
    spectrum.LevelState.handleMessage(self, message)
 
+   if message:is(prism.messages.GameOver) then
+      self.manager:enter(GameOverState(self.display))
+   end
    -- Handle any messages sent to the level state from the level. LevelState
    -- handles a few built-in messages for you, like the decision you fill out
    -- here.
@@ -67,8 +72,11 @@ function MyGameLevelState:draw(primary, secondary)
 
    -- custom terminal drawing goes here!
    
-   -- Say hello!
-   self.display:putString(1, 1, "Hello prism!")
+   -- Draw HP in the upper left
+   local health = self.decision.actor:getComponent(prism.components.Health)
+   if health then
+      self.display:putString(1, 1, "HP: " .. health.hp)
+   end
 
    -- Actually render the terminal out and present it to the screen.
    -- You could use love2d to translate and say center a smaller terminal or
@@ -120,9 +128,16 @@ function MyGameLevelState:keypressed(key, scancode)
          :at(destination:decompose()) -- restrict the query to the destination
          :first() -- grab one of the kickable things, or nil
 
-      local kick = prism.actions.Kick(owner, target)
-      if kick:canPerform(self.level) then
-         decision:setAction(kick)
+      if love.keyboard.isDown("lshift") then
+         local kick = prism.actions.Kick(owner, target)
+         if kick:canPerform(self.level) then
+            decision:setAction(kick)
+         end
+      else
+         local attack = prism.actions.Attack(owner, target)
+         if attack:canPerform(self.level) then
+            decision:setAction(attack)
+         end
       end
    end
 

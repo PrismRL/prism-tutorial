@@ -9,7 +9,9 @@ function Kobold:initialize()
       prism.components.Senses(),
       prism.components.Sight{ range = 12, fov = true },
       prism.components.Mover{ "walk" },
-      prism.components.KoboldController()
+      prism.components.KoboldController(),
+      prism.components.Health(3),
+      prism.components.Attacker(1),
    }
 end
 
