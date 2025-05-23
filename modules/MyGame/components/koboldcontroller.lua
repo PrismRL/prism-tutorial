@@ -15,9 +15,7 @@ function KoboldController:act(level, actor)
 
    if path then
       local move = prism.actions.Move(actor, path:pop())
-      if move:canPerform(level) then
-         return move
-      end
+      if level:canPerform(move) then return move end
    end
 
    return prism.actions.Wait()
