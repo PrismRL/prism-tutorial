@@ -34,7 +34,6 @@ function MyGameLevelState:__new(display)
       prism.systems.Sight(),
    })
 
-
    -- Initialize with the created level and display, the heavy lifting is done by
    -- the parent class.
    spectrum.LevelState.__new(self, level, display)
@@ -65,7 +64,7 @@ function MyGameLevelState:draw(primary, secondary)
    self.display:putSenses(primary, secondary)
 
    -- custom terminal drawing goes here!
-   
+
    -- Say hello!
    self.display:putString(1, 1, "Hello prism!")
 
@@ -110,25 +109,22 @@ function MyGameLevelState:keypressed(key, scancode)
       local destination = owner:getPosition() + keybindOffsets[action]
 
       local move = prism.actions.Move(owner, destination)
-      if move:canPerform(self.level) then
+      if self.level:canPerform(move) then
          decision:setAction(move)
          return
       end
 
+      -- stylua: ignore
       local target = self.level:query() -- grab a query object
          :at(destination:decompose()) -- restrict the query to the destination
          :first() -- grab one of the kickable things, or nil
 
       local kick = prism.actions.Kick(owner, target)
-      if kick:canPerform(self.level) then
-         decision:setAction(kick)
-      end
+      if self.level:canPerform(kick) then decision:setAction(kick) end
    end
 
    -- Wait is a no op, skip turn.
-   if action == "wait" then
-      decision:setAction(prism.actions.Wait(self.decision.actor))
-   end
+   if action == "wait" then decision:setAction(prism.actions.Wait(self.decision.actor)) end
 end
 
 return MyGameLevelState
